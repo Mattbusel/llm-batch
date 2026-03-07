@@ -36,6 +36,7 @@ struct BatchResult {
 struct BatchConfig {
     std::string api_key;
     std::string model         = "gpt-4o-mini";
+    std::string api_url       = "https://api.openai.com/v1/chat/completions";
     int         max_tokens    = 1024;
     double      temperature   = 0.0;
     size_t      num_threads   = 4;        // worker thread count
@@ -160,7 +161,7 @@ static BatchResult do_request(const BatchItem& item, const BatchConfig& cfg) {
     h.append("Content-Type: application/json");
     h.append(("Authorization: Bearer " + cfg.api_key).c_str());
     std::string resp;
-    curl_easy_setopt(c.h, CURLOPT_URL,            "https://api.openai.com/v1/chat/completions");
+    curl_easy_setopt(c.h, CURLOPT_URL,            cfg.api_url.c_str());
     curl_easy_setopt(c.h, CURLOPT_HTTPHEADER,     h.l);
     curl_easy_setopt(c.h, CURLOPT_POSTFIELDS,     body.c_str());
     curl_easy_setopt(c.h, CURLOPT_WRITEFUNCTION,  wcb);
